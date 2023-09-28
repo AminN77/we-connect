@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/AminN77/we-connect/api/controller"
 	"github.com/AminN77/we-connect/cmd/setup"
+	"github.com/AminN77/we-connect/internal"
 	"github.com/joho/godotenv"
 	"os"
 )
@@ -14,7 +15,9 @@ func main() {
 		panic(err)
 	}
 
-	con := controller.NewController()
+	repo := internal.NewMongoRepository()
+	srv := internal.NewService(repo)
+	con := controller.NewController(srv)
 
 	// setup router
 	router := setup.SetRouter(con)

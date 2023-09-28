@@ -10,7 +10,10 @@ func SetRouter(c *controller.Controller) *fiber.App {
 	app := fiberPkg.NewFiberRouter()
 
 	v1 := app.Group("/api/v1")
-	v1.Get("/financialData", c.Get)
+	{
+		v1.Get("/financialData", c.Get)
+		v1.Post("/financialData", c.Add)
+	}
 
 	return app
 }
