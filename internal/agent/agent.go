@@ -15,7 +15,7 @@ import (
 type Agent struct {
 	repo internal.Repository
 	csv  *csvPkg.Csv
-	data []internal.FinancialData
+	data []*internal.FinancialData
 	mu   sync.Mutex
 }
 
@@ -23,7 +23,7 @@ func New(repo internal.Repository, csv *csvPkg.Csv) *Agent {
 	return &Agent{
 		repo: repo,
 		csv:  csv,
-		data: make([]internal.FinancialData, 0),
+		data: make([]*internal.FinancialData, 0),
 	}
 }
 
@@ -32,10 +32,8 @@ func (a *Agent) Run(file *os.File) {
 	a.csv.ParseFileConcurrent(file, a)
 
 	// insert into mongo
-	for i := range a.data {
-		if err := a.repo.Add(&a.data[i]); err != nil {
-			log.Fatal("could not insert row, err", err.Error())
-		}
+	if err := a.repo.InsertBatch(a.data); err != nil {
+		log.Fatal(err)
 	}
 }
 
@@ -92,7 +90,7 @@ func (a *Agent) Unmarshal(record []string) error {
 	tempFd.Period = time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
 
 	a.mu.Lock()
-	a.data = append(a.data, tempFd)
+	a.data = append(a.data, &tempFd)
 	a.mu.Unlock()
 
 	return nil

@@ -9,7 +9,8 @@ import (
 )
 
 type Repository interface {
-	Add(fd *FinancialData) error
+	Insert(fd *FinancialData) error
+	InsertBatch(fd []*FinancialData) error
 }
 
 type mongoRepository struct {
@@ -29,8 +30,22 @@ func NewMongoRepository() Repository {
 	}
 }
 
-func (mr *mongoRepository) Add(fd *FinancialData) error {
+func (mr *mongoRepository) Insert(fd *FinancialData) error {
 	_, err := mr.collection.InsertOne(context.Background(), fd)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (mr *mongoRepository) InsertBatch(fds []*FinancialData) error {
+	docs := make([]interface{}, len(fds))
+	for i := 0; i < len(fds); i++ {
+		docs[i] = fds[i]
+	}
+
+	_, err := mr.collection.InsertMany(context.Background(), docs)
 	if err != nil {
 		return err
 	}

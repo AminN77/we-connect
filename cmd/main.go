@@ -32,7 +32,7 @@ func main() {
 }
 
 func runAgent(repo internal.Repository) {
-	file, err := os.OpenFile("business-financial-data-mar-2022-quarter-csv.csv",
+	file, err := os.OpenFile(os.Getenv("CSV_FILE_PATH"),
 		os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
 		panic(err)

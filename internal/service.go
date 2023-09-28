@@ -1,7 +1,7 @@
 package internal
 
 type Service interface {
-	Add(fd *FinancialData) error
+	Insert(fd *FinancialData) error
 	Get(sr string) (*FinancialData, error)
 }
 
@@ -15,8 +15,8 @@ func NewService(repo Repository) Service {
 	}
 }
 
-func (s *service) Add(fd *FinancialData) error {
-	return s.repo.Add(fd)
+func (s *service) Insert(fd *FinancialData) error {
+	return s.repo.Insert(fd)
 }
 
 func (s *service) Get(sr string) (*FinancialData, error) {

@@ -51,7 +51,7 @@ func (con *Controller) Add(c *fiber.Ctx) error {
 		return c.Status(response.Status).JSON(response)
 	}
 
-	if err := con.srv.Add(&request); err != nil {
+	if err := con.srv.Insert(&request); err != nil {
 		response.Status = http.StatusInternalServerError
 		response.Message = err.Error()
 		return c.Status(response.Status).JSON(response)
