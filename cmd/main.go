@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/AminN77/we-connect/api/controller"
-	"github.com/AminN77/we-connect/cmd/setup"
 	"github.com/AminN77/we-connect/internal"
+	"github.com/AminN77/we-connect/internal/agent"
+	"github.com/AminN77/we-connect/pkg/csv"
 	"github.com/joho/godotenv"
 	"os"
 )
@@ -15,15 +15,37 @@ func main() {
 		panic(err)
 	}
 
+	// agent
 	repo := internal.NewMongoRepository()
-	srv := internal.NewService(repo)
-	con := controller.NewController(srv)
+	runAgent(repo)
 
-	// setup router
-	router := setup.SetRouter(con)
+	//srv := internal.NewService(repo)
+	//con := controller.NewController(srv)
+	//
+	//// setup router
+	//router := setup.SetRouter(con)
+	//
+	//// run
+	//if err := router.Listen(os.Getenv("API_PORT")); err != nil {
+	//	panic(err)
+	//}
+}
 
-	// run
-	if err := router.Listen(os.Getenv("API_PORT")); err != nil {
+func runAgent(repo internal.Repository) {
+	file, err := os.OpenFile("business-financial-data-mar-2022-quarter-csv.csv",
+		os.O_RDWR|os.O_CREATE, os.ModePerm)
+	if err != nil {
 		panic(err)
 	}
+
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+
+		}
+	}(file)
+
+	c := csv.New()
+	ag := agent.New(repo, c)
+	ag.Run(file)
 }
