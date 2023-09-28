@@ -7,5 +7,6 @@ type BaseResponse struct {
 
 type Response[v any] struct {
 	BaseResponse
-	Result *v `json:"result,omitempty" `
+	Result     *v  `json:"result,omitempty" `
+	ResulCount int `json:"resulCount"`
 }

@@ -2,7 +2,7 @@ package internal
 
 type Service interface {
 	Insert(fd *FinancialData) error
-	Get(sr string) (*FinancialData, error)
+	Get(q *Query) ([]*FinancialData, error)
 }
 
 type service struct {
@@ -19,6 +19,6 @@ func (s *service) Insert(fd *FinancialData) error {
 	return s.repo.Insert(fd)
 }
 
-func (s *service) Get(sr string) (*FinancialData, error) {
-	return nil, nil
+func (s *service) Get(q *Query) ([]*FinancialData, error) {
+	return s.repo.Get(q)
 }
