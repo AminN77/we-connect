@@ -1,0 +1,99 @@
+info:
+  contact: {}
+paths:
+  /financialData:
+    get:
+      consumes:
+      - application/json
+      description: get financial data
+      parameters:
+      - default: 0
+        description: skip
+        in: query
+        minimum: 0
+        name: skip
+        type: integer
+      - default: 10
+        description: limit
+        in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - description: search by series reference
+        in: query
+        name: seriesReference
+        type: string
+      - description: search by series title 1
+        in: query
+        name: seriesTitle1
+        type: string
+      - description: search by series title 2
+        in: query
+        name: seriesTitle2
+        type: string
+      - description: search by series title 3
+        in: query
+        name: seriesTitle3
+        type: string
+      - description: search by series title 4
+        in: query
+        name: seriesTitle4
+        type: string
+      - description: search by series title 5
+        in: query
+        name: seriesTitle5
+        type: string
+      - description: search by status
+        enum:
+        - F
+        - R
+        - C
+        in: query
+        name: status
+        type: string
+      - description: search by units
+        in: query
+        name: units
+        type: string
+      - description: search by subject
+        in: query
+        name: subject
+        type: string
+      - description: search by group
+        in: query
+        name: group
+        type: string
+      - description: enable suppressed filter
+        in: query
+        name: suppressedFilter
+        type: boolean
+      - description: search by suppressed value
+        in: query
+        name: isSuppressed
+        type: boolean
+      - description: upper bound for data value
+        in: query
+        name: maxDataValue
+        type: number
+      - description: lower bound for data value
+        in: query
+        name: minDataValue
+        type: number
+      - description: upper bound for period
+        example: '"Thu, 20 Dec 2020 00:00:00 MDT"'
+        in: query
+        name: maxPeriod
+        type: string
+      - description: lower bound for period
+        example: '"Thu, 20 Dec 2020 00:00:00 MDT"'
+        in: query
+        name: minPeriod
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: List financial data
+      tags:
+      - financial data
+swagger: "2.0"

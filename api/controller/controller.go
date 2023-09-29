@@ -19,6 +19,31 @@ func NewController(srv internal.Service) *Controller {
 	}
 }
 
+// Get godoc
+// @Summary      List financial data
+// @Description  get financial data
+// @Tags         financial data
+// @Accept       json
+// @Produce      json
+// @Param        skip    query     int  false "skip" default(0) minimum(0)
+// @Param        limit    query     int  false "limit" default(10) minimum(1) maximum(100)
+// @Param        seriesReference    query     string  false  "search by series reference"
+// @Param        seriesTitle1    query     string  false  "search by series title 1"
+// @Param        seriesTitle2    query     string  false  "search by series title 2"
+// @Param        seriesTitle3    query     string  false  "search by series title 3"
+// @Param        seriesTitle4    query     string  false  "search by series title 4"
+// @Param        seriesTitle5    query     string  false  "search by series title 5"
+// @Param        status    query     string  false  "search by status" Enums(F,R,C)
+// @Param        units    query     string  false  "search by units"
+// @Param        subject    query     string  false  "search by subject"
+// @Param        group    query     string  false  "search by group"
+// @Param        suppressedFilter    query     bool  false  "enable suppressed filter"
+// @Param        isSuppressed    query     bool  false  "search by suppressed value"
+// @Param        maxDataValue    query     number  false  "upper bound for data value"
+// @Param        minDataValue    query     number  false  "lower bound for data value"
+// @Param        maxPeriod    query     string  false  "upper bound for period" example("Thu, 20 Dec 2020 00:00:00 MDT")
+// @Param        minPeriod    query     string  false  "lower bound for period" example("Thu, 20 Dec 2020 00:00:00 MDT")
+// @Router       /financialData [get]
 func (con *Controller) Get(c *fiber.Ctx) error {
 	var response dto.Response[[]*internal.FinancialData]
 	q := internal.NewQuery()
@@ -38,27 +63,6 @@ func (con *Controller) Get(c *fiber.Ctx) error {
 	response.Result = &res
 	response.Status = http.StatusOK
 	response.ResulCount = len(res)
-	return c.JSON(response)
-}
-
-func (con *Controller) Add(c *fiber.Ctx) error {
-	var request internal.FinancialData
-	var response dto.BaseResponse
-
-	if err := c.BodyParser(&request); err != nil {
-		response.Status = http.StatusBadRequest
-		response.Message = err.Error()
-		return c.Status(response.Status).JSON(response)
-	}
-
-	if err := con.srv.Insert(&request); err != nil {
-		response.Status = http.StatusInternalServerError
-		response.Message = err.Error()
-		return c.Status(response.Status).JSON(response)
-	}
-
-	response.Status = http.StatusCreated
-	response.Message = "fd created"
 	return c.JSON(response)
 }
 

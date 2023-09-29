@@ -1,0 +1,146 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/financialData": {
+            "get": {
+                "description": "get financial data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "financial data"
+                ],
+                "summary": "List financial data",
+                "parameters": [
+                    {
+                        "minimum": 0,
+                        "type": "integer",
+                        "default": 0,
+                        "description": "skip",
+                        "name": "skip",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "search by series reference",
+                        "name": "seriesReference",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "search by series title 1",
+                        "name": "seriesTitle1",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "search by series title 2",
+                        "name": "seriesTitle2",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "search by series title 3",
+                        "name": "seriesTitle3",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "search by series title 4",
+                        "name": "seriesTitle4",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "search by series title 5",
+                        "name": "seriesTitle5",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "F",
+                            "R",
+                            "C"
+                        ],
+                        "type": "string",
+                        "description": "search by status",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "search by units",
+                        "name": "units",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "search by subject",
+                        "name": "subject",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "search by group",
+                        "name": "group",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "enable suppressed filter",
+                        "name": "suppressedFilter",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "search by suppressed value",
+                        "name": "isSuppressed",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "description": "upper bound for data value",
+                        "name": "maxDataValue",
+                        "in": "query"
+                    },
+                    {
+                        "type": "number",
+                        "description": "lower bound for data value",
+                        "name": "minDataValue",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"Thu, 20 Dec 2020 00:00:00 MDT\"",
+                        "description": "upper bound for period",
+                        "name": "maxPeriod",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "\"Thu, 20 Dec 2020 00:00:00 MDT\"",
+                        "description": "lower bound for period",
+                        "name": "minPeriod",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            }
+        }
+    }
+}
