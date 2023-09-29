@@ -1,3 +1,7 @@
+// Package agent is the implementation of the data loader agent. The Agent provides an implementation
+// for github.com/AminN77/we-connect/pkg/csv marshaller and uses its ParseFileConcurrent method to
+// load data concurrently. Afterwards, data will be ready for inserting to the database and the InsertBatch
+// on Repository will be called.
 package agent
 
 import (
@@ -12,11 +16,19 @@ import (
 	"time"
 )
 
+var (
+	ErrUnmarshalling = errors.New("some error occurred through unmarshalling")
+)
+
 type Agent struct {
 	repo internal.Repository
 	csv  *csvPkg.Csv
+
+	// data stores the parsed data after unmarshalling
 	data []*internal.FinancialData
-	mu   sync.Mutex
+
+	// mu is needed for synchronization between multiple goroutines which try to access the data
+	mu sync.Mutex
 }
 
 func New(repo internal.Repository, csv *csvPkg.Csv) *Agent {
@@ -27,16 +39,16 @@ func New(repo internal.Repository, csv *csvPkg.Csv) *Agent {
 	}
 }
 
+// Run is the actual routine of the agent
 func (a *Agent) Run(file *os.File) {
-	// parse csv
 	a.csv.ParseFileConcurrent(file, a)
 
-	// insert into mongo
 	if err := a.repo.InsertBatch(a.data); err != nil {
 		log.Fatal(err)
 	}
 }
 
+// Unmarshal is a simple implementation for unmarshalling a specific model, internal.FinancialData.
 func (a *Agent) Unmarshal(record []string) error {
 	if len(record) != 14 {
 		return errors.New("len is not 14")
@@ -59,7 +71,8 @@ func (a *Agent) Unmarshal(record []string) error {
 	if record[2] != "" {
 		rawDataValue, err := strconv.ParseFloat(record[2], 64)
 		if err != nil {
-			log.Fatal("could not parse data value, err:", err.Error())
+			log.Println("could not parse data value, err:", err.Error())
+			return ErrUnmarshalling
 		}
 		tempFd.DataValue = rawDataValue
 	} else {
@@ -76,7 +89,8 @@ func (a *Agent) Unmarshal(record []string) error {
 	// Magnitude
 	rawMag, err := strconv.Atoi(record[6])
 	if err != nil {
-		log.Fatal("could not parse magnitude, err:", err.Error())
+		log.Println("could not parse magnitude, err:", err.Error())
+		return ErrUnmarshalling
 	}
 	tempFd.Magnitude = rawMag
 
@@ -85,7 +99,8 @@ func (a *Agent) Unmarshal(record []string) error {
 	year, err := strconv.Atoi(rawDate[0])
 	month, err := strconv.Atoi(rawDate[1])
 	if err != nil {
-		log.Fatal("could not parse period, err:", err.Error())
+		log.Println("could not parse period, err:", err.Error())
+		return ErrUnmarshalling
 	}
 	tempFd.Period = time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
 

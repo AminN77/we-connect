@@ -1,3 +1,4 @@
+// Package dto represents a set of reusable structs for data transmissions.
 package dto
 
 type BaseResponse struct {

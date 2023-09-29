@@ -17,10 +17,13 @@ func NewQuery() *Query {
 	}
 }
 
+// Query is the aggregation of the available query params of the repository
 type Query struct {
 	Limit, Skip                                                  int64
-	IsSuppressed, SuppressedFilter                               bool
-	MaxPeriod, MinPeriod                                         time.Time
+	MaxPeriod                                                    time.Time
+	IsSuppressed                                                 bool
+	MinPeriod                                                    time.Time
+	SuppressedFilter                                             bool
 	MaxDataValue, MinDataValue                                   float64
 	SeriesReference, Status, Units, Subject, Group, SeriesTitle1 string
 	SeriesTitle2, SeriesTitle3, SeriesTitle4, SeriesTitle5       string

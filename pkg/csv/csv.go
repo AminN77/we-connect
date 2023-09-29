@@ -1,3 +1,7 @@
+// Package csv provides the concurrent parsing the csv files. ParseFileConcurrent gets a file and a custom
+// marshaller, creates a goroutine pool with goroutines as many as your Cpu cores. These goroutines then
+// consume the src channel for incoming csv line and unmarshal with provided unmarshal impl.
+// TODO: R&D on reading csv file concurrently via file.Seek
 package csv
 
 import (

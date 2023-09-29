@@ -1,12 +1,14 @@
 package controller
 
 import (
+	"context"
 	"github.com/AminN77/we-connect/api/dto"
 	"github.com/AminN77/we-connect/internal"
 	"github.com/gofiber/fiber/v2"
 	"net/http"
 	"net/mail"
 	"strconv"
+	"time"
 )
 
 type Controller struct {
@@ -45,6 +47,9 @@ func NewController(srv internal.Service) *Controller {
 // @Param        minPeriod    query     string  false  "lower bound for period" example("Thu, 20 Dec 2020 00:00:00 MDT")
 // @Router       /financialData [get]
 func (con *Controller) Get(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+
 	var response dto.Response[[]*internal.FinancialData]
 	q := internal.NewQuery()
 	if err := con.bindQuery(q, c); err != nil {
@@ -52,8 +57,8 @@ func (con *Controller) Get(c *fiber.Ctx) error {
 		response.Message = err.Error()
 		return c.Status(response.Status).JSON(response)
 	}
-
-	res, err := con.srv.Get(q)
+	
+	res, err := con.srv.Get(q, ctx)
 	if err != nil {
 		response.Status = http.StatusInternalServerError
 		response.Message = err.Error()
